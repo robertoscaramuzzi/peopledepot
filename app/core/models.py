@@ -176,10 +176,12 @@ class Project(AbstractBaseModel):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="projects_as_org",
-        help_text=textwrap.dedent("""
+        help_text=textwrap.dedent(
+            """
             Can be retrieved from gh api with the following: curl -H
             "Authorization: token [gh_PAT]" https://api.github.com/orgs/[org]
-        """).strip(),
+        """
+        ).strip(),
     )
     github_primary_repo = models.ForeignKey(
         "ProjectUrl",
@@ -187,11 +189,13 @@ class Project(AbstractBaseModel):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="projects_as_repo",
-        help_text=textwrap.dedent("""
+        help_text=textwrap.dedent(
+            """
             Can be retrieved from gh api with the following:
             curl -H "Authorization: token [gh_PAT]"
             https://api.github.com/repos/[org]/[repo]
-        """).strip(),
+        """
+        ).strip(),
     )
     current_status = models.ForeignKey(
         ProjectProgramAreaStatusType, null=True, on_delete=models.PROTECT
@@ -331,7 +335,7 @@ class Location(AbstractBaseModel):
 
 class ModernJobTitle(AbstractBaseModel):
     soc_detailed = models.ForeignKey(
-        "SocDetailed",
+        "SOCDetailed",
         on_delete=models.CASCADE,
         related_name="modern_job_titles",
     )
@@ -464,7 +468,7 @@ class StackElement(AbstractBaseModel):
     url = models.URLField(blank=True)
     logo = models.URLField(blank=True)
     active = models.BooleanField(null=True)
-    element_type = models.ForeignKey(StackElementType, on_delete=models.CASCADE)
+    stack_element_type = models.ForeignKey(StackElementType, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Stack Elements"
@@ -488,7 +492,7 @@ class Sdg(AbstractBaseModel):
         return f"{self.name}"
 
 
-class SdgTargetIndicator(AbstractBaseModel):
+class SDGTargetIndicator(AbstractBaseModel):
     """
     Target indicators for each SDG.
     """
@@ -563,13 +567,13 @@ class EventType(AbstractBaseModel):
         return f"{self.name}"
 
 
-class SocBroad(AbstractBaseModel):
+class SOCBroad(AbstractBaseModel):
     """
-    Broad SOC category tied to a SocMinor.
+    Broad SOC category tied to a SOCMinor.
     """
 
     soc_minor = models.ForeignKey(
-        "SocMinor",
+        "SOCMinor",
         on_delete=models.CASCADE,
         related_name="soc_broads",
     )
@@ -580,13 +584,13 @@ class SocBroad(AbstractBaseModel):
         return self.title
 
 
-class SocDetailed(AbstractBaseModel):
+class SOCDetailed(AbstractBaseModel):
     """
     Dictionary of SOC detailed occupations.
     """
 
     soc_broad = models.ForeignKey(
-        "SocBroad",
+        "SOCBroad",
         on_delete=models.CASCADE,
         related_name="soc_detailed",
     )
@@ -599,7 +603,7 @@ class SocDetailed(AbstractBaseModel):
         return f"{self.occ_code} - {self.title}"
 
 
-class SocMajor(AbstractBaseModel):
+class SOCMajor(AbstractBaseModel):
     occ_code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
 
@@ -607,9 +611,9 @@ class SocMajor(AbstractBaseModel):
         return self.title
 
 
-class SocMinor(AbstractBaseModel):
+class SOCMinor(AbstractBaseModel):
     soc_major = models.ForeignKey(
-        SocMajor, blank=True, null=True, on_delete=models.CASCADE
+        SOCMajor, blank=True, null=True, on_delete=models.CASCADE
     )
     occ_code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
@@ -869,7 +873,7 @@ class UserEmploymentHistory(AbstractBaseModel):
     )
 
     soc_detailed = models.ForeignKey(
-        "SocDetailed",
+        "SOCDetailed",
         on_delete=models.CASCADE,
         related_name="user_employment_histories",
     )
