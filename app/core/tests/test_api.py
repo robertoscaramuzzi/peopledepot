@@ -1,6 +1,6 @@
+import json
 from uuid import UUID
 
-import json
 import pytest
 from django.urls import reverse
 from rest_framework import status
@@ -271,11 +271,11 @@ def test_create_event_occurrence_change(auth_client, event_pm, location):
     }
     should_attend_change = {
         "practice_area": "Development",
-        "permission_type": "memberProject"
+        "permission_type": "memberProject",
     }
     could_attend_change = {
         "practice_area": "Design",
-        "permission_type": "memberGeneral"
+        "permission_type": "memberGeneral",
     }
     payload = {
         "event": event_pm.pk,
