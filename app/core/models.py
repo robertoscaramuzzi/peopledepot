@@ -287,9 +287,9 @@ class EventOccurrenceChange(AbstractBaseModel):
         "Location", on_delete=models.DO_NOTHING, null=True
     )
     additional_info_change = models.TextField(null=True)
-    must_attend_change = models.JSONField(default=list, null=True)
-    should_attend_change = models.JSONField(default=list, null=True)
-    could_attend_change = models.JSONField(default=list, null=True)
+    must_attend_change = models.JSONField(null=True)
+    should_attend_change = models.JSONField(null=True)
+    could_attend_change = models.JSONField(null=True)
 
     def __str__(self):
         return (
