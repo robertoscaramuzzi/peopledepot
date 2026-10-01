@@ -1,5 +1,6 @@
 from uuid import UUID
 
+import json
 import pytest
 from django.urls import reverse
 from rest_framework import status
@@ -262,8 +263,20 @@ def test_create_event_type(auth_client):
     assert res.data["name"] == payload["name"]
 
 
-def test_create_event_occurrence_change(auth_client, event_pm):
+def test_create_event_occurrence_change(auth_client, event_pm, location):
     """Test creating an event occurrence change"""
+    must_attend_change = {
+        "practice_area": "Professional Development",
+        "permission_type": "adminProject",
+    }
+    should_attend_change = {
+        "practice_area": "Development",
+        "permission_type": "memberProject"
+    }
+    could_attend_change = {
+        "practice_area": "Design",
+        "permission_type": "memberGeneral"
+    }
     payload = {
         "event": event_pm.pk,
         "start_time": "2026-01-01T18:00:00Z",
@@ -272,12 +285,20 @@ def test_create_event_occurrence_change(auth_client, event_pm):
         "duration_in_min_change": 90,
         "video_conference_url_change": "https://zoom.com/newlink",
         "additional_info_change": "Updated additional info",
+        "location_change": location.uuid,
+        "must_attend_change": json.dumps(must_attend_change),
+        "should_attend_change": json.dumps(should_attend_change),
+        "could_attend_change": json.dumps(could_attend_change),
     }
     res = auth_client.post(EVENT_OCCURRENCE_CHANGES_URL, payload)
     assert res.status_code == status.HTTP_201_CREATED
     assert res.data["name_change"] == payload["name_change"]
     assert res.data["start_time"] == payload["start_time"]
     assert str(res.data["event"]) == str(event_pm.pk)
+    assert res.data["location_change"] == location.uuid
+    assert res.data["must_attend_change"] == must_attend_change
+    assert res.data["should_attend_change"] == should_attend_change
+    assert res.data["could_attend_change"] == could_attend_change
 
 
 def test_list_event_occurrence_change(auth_client, event_pm):
